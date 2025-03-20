@@ -125,7 +125,7 @@ export default function Chat() {
     ]);
 
     try {
-      const response = await fetch("https://api-inbis.vercel.app/api/chat", {
+      const response = await fetch("https://api-inbis-planejamento.vercel.app/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ conversationId, userMessage }),
