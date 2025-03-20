@@ -4,10 +4,22 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function CodeBlock({ code }) {
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(code);
-    toast.success("Código copiado!", { autoClose: 2000 });
-  };
+    const copyToClipboard = () => {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code)
+            .then(() => {
+              toast.success("Código copiado!", { autoClose: 2000 });
+            })
+            .catch((error) => {
+              console.error("Erro ao copiar para a área de transferência:", error);
+              toast.error("Erro ao copiar o código. Por favor, tente novamente.");
+            });
+        } else {
+          // Fallback para navegadores que não suportam navigator.clipboard
+          console.error("A API navigator.clipboard não é suportada neste navegador.");
+          toast.error("Não foi possível copiar o código. Tente novamente ou utilize Ctrl+C.");
+        }
+      };
 
   return (
     <div style={styles.codeBlock}>
@@ -113,7 +125,7 @@ export default function Chat() {
     ]);
 
     try {
-      const response = await fetch("http://26.87.3.24:20254/api/chat", {
+      const response = await fetch("https://api-inbis.vercel.app/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ conversationId, userMessage }),
